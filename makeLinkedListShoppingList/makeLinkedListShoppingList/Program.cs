@@ -4,19 +4,31 @@ namespace makeLinkedListShoppingList
 {
     class Program
     {
+        public static void AddItem(SinglyLinkedList<string> list, string item)
+        {
+            list.AddLast(item);
+        }
+
+        public static void RemoveItem(SinglyLinkedList<string> list, string item)
+        {
+            Node<string> toRemove = list.Search(item);
+            list.removeSpecific(toRemove);
+
+        }
+
+        public static void View(SinglyLinkedList<string> list)
+        {
+            Console.WriteLine(list);
+        }
         static void Main(string[] args)
         {
             SinglyLinkedList<string> list = new SinglyLinkedList<string>();
-            list.AddFirst("1");
-            list.AddLast("2");
-            list.AddFirst("0");
-            //list.RemoveFirst();
-            list.RemoveLast();
-            Console.WriteLine("a");
-            //Console.WriteLine(list);
-            list.Clear();
-            //Console.WriteLine(list.Contains("1"));
-            //Console.WriteLine(list.Contains("7"));
+            AddItem(list, "eggs");
+            AddItem(list, "chocolate");
+            AddItem(list, "vanilla");
+            AddItem(list, "raspberries");
+            RemoveItem(list, "eggs");
+            View(list);
 
             
 

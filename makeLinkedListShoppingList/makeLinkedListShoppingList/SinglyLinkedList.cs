@@ -141,6 +141,31 @@ namespace makeLinkedListShoppingList
             }
         }
 
+        public void removeSpecific(Node<T> given)
+        {
+            Node<T> current = head;
+            if (head.Equals(given))
+            {
+                RemoveFirst();
+            }
+            else
+            {
+                while (current.next.next != null)
+                {
+                    if (current.next.Equals(given))
+                    {
+                        current.next = current.next.next;
+                        break;
+                    }
+                    current = current.next;
+                }
+                if (current.next.Equals(given))
+                {
+                    current.next = current.next.next;
+                }
+            }
+        }
+
         //remove all elements of the list
         public void Clear()
         {
@@ -157,15 +182,14 @@ namespace makeLinkedListShoppingList
             else
             {
                 Node<T> current = head;
-                while (current.next.next != null)
+                while (current.next != null)
                 {
-                    return true;
-                    /*
-                    if(current.input.Equals(input))
+                    if (current.input.Equals(input))
                     {
                         return true;
                     }
-                    */
+                    current = current.next;
+                
                 }
                 return false;
             }
@@ -173,16 +197,39 @@ namespace makeLinkedListShoppingList
         }
 
         //Iterate and find the Node<T> that contains the specific value
-        public void Search()
+        public Node<T> Search(T input)
         {
+                Node<T> current = head;
+                while (current.next != null)
+                {
+                    if (current.input.Equals(input))
+                    {
+                    break;
+                    }
+                current = current.next;
 
+                }
+            return current;
         }
 
         //should return the number of elements in list
         public int Count()
         {
-            int toReturn = 0;
-            return toReturn;
+            if (head == null)
+            {
+                return 0;
+            }
+            else
+            {
+                int count = 0;
+                Node<T> current = head;
+                while (current.next != null)
+                {
+                    count++;
+
+                }
+                return count;
+            }
         }
 
         public override string ToString()
