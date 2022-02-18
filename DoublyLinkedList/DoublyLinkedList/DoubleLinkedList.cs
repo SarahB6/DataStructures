@@ -12,6 +12,7 @@ namespace DoublyLinkedList
         {
 
         }
+
         public void AddFirst(T input)
         {
             Node<T> toAdd = new Node<T>(input);
@@ -205,6 +206,49 @@ namespace DoublyLinkedList
                 return count+1;
             }
         }
+
+        public int index(T given)
+        {
+            if (head == null)
+            {
+                return 0;
+            }
+            else
+            {
+                int count = 0;
+                Node<T> current = head;
+                while (current.next != null)
+                {
+                    if (current.input.Equals(given))
+                    {
+                        return count;
+                    }
+                    count++;
+                    current = current.next;
+
+                }
+                return count + 1;
+            }
+        }
+
+        public T outputAtIndex(int ind)
+        {
+                int count = 0;
+                Node<T> current = head;
+                while (current.next != null)
+                {
+                    if (index(current.input).Equals(ind))
+                    {
+                        return current.input;
+                    }
+                    count++;
+                    current = current.next;
+               
+
+                } return current.input;
+        }
+            
+
 
         //Loop through linked list, append to string, return string
         public override string ToString()
