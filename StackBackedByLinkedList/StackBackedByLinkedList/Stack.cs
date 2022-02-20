@@ -7,8 +7,6 @@ namespace StackBackedByLinkedList
     class Stack<T>
     {
         DoubleLinkedList<T> list = new DoubleLinkedList<T>();
-        public Node<T> head = null;
-        public Node<T> tail = null;
         public Stack()
         {
 
@@ -27,7 +25,7 @@ namespace StackBackedByLinkedList
 
         public T Peek()
         {
-            return list.OutputAtIndex(list.Count()-1);
+            return list.tail.input;
         }
     }
 }
