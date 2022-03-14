@@ -18,7 +18,7 @@ namespace QuickSort
 
                 }
                 QuickSorter<int> sort = new QuickSorter<int>();
-                sort.QuickSort(check, 0, check.Count-1);
+                sort.QuickSortH(check, 0, check.Count-1);
                 int previous = check[0];
                 for (int i = 1; i < check.Count; i++)
                 {
@@ -43,7 +43,7 @@ namespace QuickSort
             first.Add(2);
             first.Add(1);
             first.Add(5);
-            sort.QuickSort(first, 0, first.Count-1);
+            sort.QuickSortL(first, 0, first.Count-1);
             bool response = testQuickSort(100, 9, 0, 100);
         }
     }
