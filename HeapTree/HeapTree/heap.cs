@@ -4,11 +4,18 @@ using System.Text;
 
 namespace HeapTree
 {
-    class maxheap<T>
+    class heap<T>
     where T : IComparable<T>
     {
         List<T> list = new List<T>();
         int remove = 0;
+        IComparer<T> comparer;
+
+        public heap(IComparer<T> comparer)
+        {
+            this.comparer = comparer;
+        }
+
         public void Insert(T toAdd)
         {
             list.Add(toAdd);
@@ -26,7 +33,7 @@ namespace HeapTree
         }
         public int getParent(int i)
         {
-            if (i % 2 == 1)
+            if(i%2 == 1)
             {
                 return i / 2;
             }
@@ -35,7 +42,7 @@ namespace HeapTree
         public void HeapifyUp(T toAdd)
         {
             int add = list.Count - 1;
-            while (list[add].CompareTo(list[getParent(add)]) > 0)
+            while(comparer.Compare(list[add], list[getParent(add)]) < 0) 
             {
                 T val = list[add];
                 list[add] = list[getParent(add)];
@@ -60,7 +67,7 @@ namespace HeapTree
 
         public void HeapifyDown()
         {
-            if (list[remove].CompareTo(list[getLeftChild(remove)]) <= 0)
+            if (comparer.Compare(list[remove], list[getLeftChild(remove)]) >= 0)
             {
                 T val = list[remove];
                 list[remove] = list[getLeftChild(remove)];
@@ -69,7 +76,7 @@ namespace HeapTree
             }
             else if (getRightChild(remove) < list.Count)
             {
-                if (list[remove].CompareTo(list[getRightChild(remove)]) <= 0)
+             if (comparer.Compare(list[remove], list[getRightChild(remove)]) >=0)
                 {
                     T val = list[remove];
                     list[remove] = list[getRightChild(remove)];
@@ -83,10 +90,9 @@ namespace HeapTree
         {
             string s = "";
             int count = list.Count;
-            for (int i = 0; i < count; i++)
+            for(int i = 0; i<count; i++)
             {
                 s += $" {Pop()}";
-                //s += $" {list[i]}";
             }
             return s;
         }
