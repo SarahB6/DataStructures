@@ -22,21 +22,21 @@ namespace BinarySearchTrees
             {
                 return root;
             }
-            while(!current.value.Equals(key))
+            while (!current.value.Equals(key))
             {
                 if (current.leftChild.value.Equals(key))
                 {
                     return current.leftChild;
                 }
-                else if(current.rightChild.value.Equals(key))
+                else if (current.rightChild.value.Equals(key))
                 {
                     return current.rightChild;
                 }
-                else if(current.value.CompareTo(key) > 0)
+                else if (current.value.CompareTo(key) > 0)
                 {
                     current = current.leftChild;
                 }
-                else if(current.value.CompareTo(key) < 0)
+                else if (current.value.CompareTo(key) < 0)
                 {
                     current = current.rightChild;
                 }
@@ -79,9 +79,9 @@ namespace BinarySearchTrees
         {
             bool stillGoing = true;
             Node<T> current = root;
-            while(stillGoing)
+            while (stillGoing)
             {
-                if(current.rightChild != null)
+                if (current.rightChild != null)
                 {
                     current = current.rightChild;
                 }
@@ -121,7 +121,7 @@ namespace BinarySearchTrees
             }
             Node<T> current = root;
             bool stillGoing = true;
-            while(stillGoing)
+            while (stillGoing)
             {
                 if (input.value.CompareTo(current.value) > 0)
                 {
@@ -167,7 +167,32 @@ namespace BinarySearchTrees
 
 
             }
+        }
+
+        public void InsertR(T value)
+        {
+            root = insertR(root, value);
+        }
+
+        private Node<T> insertR(Node<T> current, T value)
+        {
+            if (current == null)
+            {
+                Node<T> toReturn = new Node<T>(value);
+                return toReturn;
             }
+            if (current.value.CompareTo(value) > 0)
+            {
+                current.leftChild = insertR(current.leftChild, value);
+                return current;
+            }
+            else
+            {
+                current.rightChild = insertR(current.rightChild, value);
+                return current;
+            }
+
+        }
 
         public void delete(T input)
         {
@@ -227,15 +252,16 @@ namespace BinarySearchTrees
             {
                 bool stillGoing = true;
                 node = node.leftChild;
-                while(stillGoing)
+                while (stillGoing)
                 {
-                    if(node.rightChild != null)
+                    if (node.rightChild != null)
                     {
                         current = node.rightChild;
                     }
                     else
-                    {   original.value = node.value;
-                        if(node.parent.rightChild.Equals(node))
+                    {
+                        original.value = node.value;
+                        if (node.parent.rightChild.Equals(node))
                         {
                             node.parent.rightChild = null;
                         }
@@ -247,7 +273,7 @@ namespace BinarySearchTrees
                         break;
                     }
                 }
-               
+
             }
         }
     }
