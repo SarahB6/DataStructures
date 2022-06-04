@@ -77,7 +77,7 @@ namespace SkipList
             Random r = new Random();
             for (int i = 0; i < 10; i++)
             {
-                list.Add(r.Next(1, 10));
+                list.Add(r.Next(1, 100));
             }
             totalPrint(list);
             Console.WriteLine("____________________________________________");
