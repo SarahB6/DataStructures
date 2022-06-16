@@ -13,11 +13,7 @@ namespace UnweightedUndirectedGraph
         
         public Graph()
         {
-            List<Vertex<T>> list = new List<Vertex<T>>();
-            Vertices = list;
-
-            List<T> list1 = new List<T>();
-            
+            Vertices = new List<Vertex<T>>();
         }
         public void AddVertex(Vertex<T> v)
         {
@@ -31,7 +27,13 @@ namespace UnweightedUndirectedGraph
         {
             if(Vertices.Contains(v))
             {
+                
+                for(int i = 0; i<v.Neighbors.Count; i++)
+                {
+                    v.Neighbors[i].Neighbors.Remove(v);
+                }
                 v.Neighbors.Clear();
+
                 Vertices.Remove(v);
                 return true;
             }

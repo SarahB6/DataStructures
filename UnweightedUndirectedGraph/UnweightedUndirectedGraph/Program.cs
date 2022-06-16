@@ -15,7 +15,7 @@ namespace UnweightedUndirectedGraph
             g.AddVertex(v3);
             g.AddEdge(v1, v2);
             g.AddEdge(v1, v3);
-            g.RemoveEdge(v1, v2);
+            g.RemoveVertex(v1);
             Vertex<int> a = g.Search(7);
         }
     }

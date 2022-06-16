@@ -17,8 +17,7 @@ namespace UnweightedUndirectedGraph
         public Vertex(T value) 
         {
             this.value = value;
-            List<Vertex<T>> list = new List<Vertex<T>>();
-            Neighbors = list;
+            Neighbors = new List<Vertex<T>>();
         }
 
        
