@@ -6,13 +6,20 @@ namespace WeightedDirectedGraph
 {
     public class Vertex<T>
     {
-        public T Value { get; set; }
+        public T value { get; set; }
         public List<Edge<T>> Neighbors { get; set; }
 
-        public int NeighborCount => Neighbors.Count;
-
-        public Vertex(T value) 
+        public int GetNeighborCount()
         {
+            return Neighbors.Count;
         }
+
+        public Vertex(T value)
+        {
+            this.value = value;
+            Neighbors = new List<Edge<T>>();
+        }
+
+
     }
 }
