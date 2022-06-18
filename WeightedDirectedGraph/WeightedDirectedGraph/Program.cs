@@ -15,7 +15,7 @@ namespace WeightedDirectedGraph
             g.AddVertex(v3);
             g.AddEdge(v1, v2, 9);
             g.AddEdge(v2, v3, 8);
-            g.RemoveVertex(v1);
+            Vertex<int> v = g.Search(3);
         }
     }
 }
