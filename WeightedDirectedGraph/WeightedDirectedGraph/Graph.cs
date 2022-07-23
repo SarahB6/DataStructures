@@ -7,7 +7,7 @@ namespace WeightedDirectedGraph
     public class Graph<T>
     {
         public List<Vertex<T>> Vertices;
-
+         
         public List<Edge<T>> Edges { get; set; }
         public int VertexCount => Vertices.Count;
         public Graph()
@@ -15,7 +15,7 @@ namespace WeightedDirectedGraph
             Vertices = new List<Vertex<T>>();
             Edges = new List<Edge<T>>();
         }
-        public void AddVertex(Vertex<T> v)
+        public void AddVertex(Vertex<T> v) 
         {
             if (v != null && v.GetNeighborCount() == 0 && !Vertices.Contains(v))
             {
@@ -32,9 +32,20 @@ namespace WeightedDirectedGraph
                     {
                         if(Vertices[i].Neighbors[a].EndingPoint.Equals(v))
                         {
-                            Vertices[i].Neighbors.RemoveAt(a);
+                            for (int b = 0; b < Edges.Count; b++)
+                            {
+                                if (Edges[b].StartingPoint.Equals(Vertices[i]))
+                                {
+                                    RemoveEdge(Vertices[i], v);
+                                }
+                            }
+                            
                         }
                     }
+                }
+                for(int b = 0; b<v.Neighbors.Count; b++)
+                {
+                        RemoveEdge(v, v.Neighbors[b].EndingPoint);
                 }
                 v.Neighbors.Clear();
                 Vertices.Remove(v);
@@ -54,21 +65,23 @@ namespace WeightedDirectedGraph
             return false;
         }
 
-        public bool RemoveEdge(Vertex<T> a, Vertex<T> b, float distance)
+        public bool RemoveEdge(Vertex<T> a, Vertex<T> b)
         {
-            Edge<T> e = new Edge<T>(a, b, distance);
             if (a!= null && b!= null)
             {
-                for (int i = 0; i < a.Neighbors.Count; i++)
+                for (int c = 0; c < Edges.Count; c++)
                 {
-                    if (a.Neighbors[i].EndingPoint.Equals(b))
-                    { 
-                        Edges.Remove(a.Neighbors[i]);
-                        a.Neighbors.RemoveAt(i);
-                       
-                        return true;
+                    for (int i = 0; i < a.Neighbors.Count; i++)
+                    {
+                        if (a.Neighbors[i].Equals(Edges[c]))
+                        {
+                            Edges.Remove(Edges[c]);
+                            a.Neighbors.RemoveAt(i);
+
+                            return true;
+                        }
                     }
-                }    
+                }
                 
             }
             return false;
@@ -84,14 +97,23 @@ namespace WeightedDirectedGraph
             }
             return default;
         }
-        public Edge<T> GetEdge(Vertex<T> a, Vertex<T> b, float distance)
+        public Edge<T> GetEdge(Vertex<T> a, Vertex<T> b)
         {
-            Edge<T> e = new Edge<T>(a, b, distance);
-            if(a != null && b != null && a.Neighbors.Contains(e))
+            if (a != null && b != null)
             {
-                return e;
+                for (int c = 0; c < Edges.Count; c++)
+                {
+                    for (int i = 0; i < a.Neighbors.Count; i++)
+                    {
+                        if (a.Neighbors[i].Equals(Edges[c]))
+                        {
+                            return Edges[c];
+                        }
+                    }
+                }
+
             }
             return default;
         }
-    }
+    } 
 }

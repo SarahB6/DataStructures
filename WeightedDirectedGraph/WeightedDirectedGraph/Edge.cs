@@ -14,7 +14,7 @@ namespace WeightedDirectedGraph
         {
             StartingPoint = startingPoint;
             EndingPoint = endingPoint;
-            Distance = distance;
+            Distance = distance; 
         }
     }
 }
