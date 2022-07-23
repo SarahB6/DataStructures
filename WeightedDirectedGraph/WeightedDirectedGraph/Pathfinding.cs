@@ -17,9 +17,10 @@ namespace WeightedDirectedGraph
             Stack<Vertex<T>> st = new Stack<Vertex<T>>();
             Dictionary<Vertex<T>, Vertex<T>> founder = new Dictionary<Vertex<T>, Vertex<T>>();
             List<Vertex<T>> seen = new List<Vertex<T>>();
+            List<T> empty = new List<T>();
             st.Push(v1);
             seen.Add(v1);
-            while(st != null)
+            while(st.Count > 0)
             {
                 Vertex<T> current = st.Pop();
                 if (current == v2)
@@ -51,34 +52,12 @@ namespace WeightedDirectedGraph
                     }
                 }
             }
-            List<T> empty = new List<T>();
+            
             return empty;
         }
 
 
-        //bredth-first search:
-        //vertex a, vertex b(both in a graph g)
-        //both connected through other edges
-        //dict<Vertex, bool> parents
-        //parents[a] = true if parents false if not
-        //Queue<Vertex> agenda
-        //agenda.Add(a)
-        //while agenda isnt empty
-        //v1 = agenda.dequeue()
-        //if v1 == b
-        // path = calcualte_path(v1)
-        //List<T> path
-        //while v in parents
-        //path.Add(v.Value)
-        //return path
-        //else
-        // for every neighbor of v1.neighbor
-        //if neighbor is in parents
-        //cont
-        //else
-        //parents[neighbor] = true
-        //agenda.Add(neighbor)
-        //return null   
+       
         public static List<T> BreadthFirst (Vertex<T> v1, Vertex<T> v2)
         {
             Dictionary<Vertex<T>, bool> dict= new Dictionary<Vertex<T>, bool>();

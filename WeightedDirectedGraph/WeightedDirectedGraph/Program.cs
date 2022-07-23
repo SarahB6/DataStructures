@@ -27,7 +27,7 @@ namespace WeightedDirectedGraph
             g.AddEdge(v2, v4, 8);
             g.AddEdge(v3, v4, 1);
             Pathfinding<int> pathfinder = new Pathfinding<int>(g);
-            List<int> list = pathfinder.DepthFirst(v1, v4);
+            List<int> list = pathfinder.DepthFirst(v1, v6);
         }
     }
 }
