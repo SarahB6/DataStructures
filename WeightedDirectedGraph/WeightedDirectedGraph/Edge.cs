@@ -5,7 +5,13 @@ using System.Text;
 namespace WeightedDirectedGraph
 {
     public class Edge<T>
+    where T : IComparable<T>
     {
+        IComparer<T> comparer;
+        public Edge(IComparer<T> comparer)
+        {
+            this.comparer = comparer;
+        }
         public Vertex<T> StartingPoint { get; set; }
         public Vertex<T> EndingPoint { get; set; }
         public float Distance { get; set; }
@@ -14,7 +20,7 @@ namespace WeightedDirectedGraph
         {
             StartingPoint = startingPoint;
             EndingPoint = endingPoint;
-            Distance = distance; 
+            Distance = distance;
         }
     }
 }

@@ -5,7 +5,14 @@ using System.Text;
 namespace WeightedDirectedGraph
 {
     public class Graph<T>
+    where T : IComparable<T>
     {
+        IComparer<T> comparer;
+        public Graph(IComparer<T> comparer)
+        {
+            this.comparer = comparer;
+        }
+
         public List<Vertex<T>> Vertices;
          
         public List<Edge<T>> Edges { get; set; }
