@@ -20,7 +20,15 @@ namespace HashMap
             KeyValuePair<string, int> pair4 = new KeyValuePair<string, int>("f", 8);
             h.Add(pair4);
 
-            h.Remove("d");
+            Console.WriteLine(h.Contains(pair1));
+            Console.WriteLine(h.Contains(pair2));
+            KeyValuePair<string, int>[] array = new KeyValuePair<string, int>[5];
+            h.CopyTo(array, 1);
+
+            for(int i = 0; i<array.Length; i++)
+            {
+                Console.WriteLine(array[i]);
+            }
         }
     }
 }
