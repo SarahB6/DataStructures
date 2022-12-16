@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QuickFind
+namespace UnionFind
 {
     public class QuickFind<T>
     {
@@ -38,24 +38,11 @@ namespace QuickFind
             }
             int val1 = sets[map[p]];
             int val2 = sets[map[q]];
-            if(val1>val2)
+            for(int i = 0; i<sets.Length; i++)
             {
-                for(int i = 0; i<sets.Length; i++)
+                if(sets[i] == val1)
                 {
-                    if(sets[i] == val1)
-                    {
-                        sets[i] = val2;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < sets.Length; i++)
-                {
-                    if (sets[i] == val2)
-                    {
-                        sets[i] = val1;
-                    }
+                    sets[i] = val2;
                 }
             }
             return true;
@@ -63,11 +50,7 @@ namespace QuickFind
 
         public bool AreConnected(T p, T q)
         {
-            if(sets[map[p]] == sets[map[q]])
-            {
-                return true;
-            }
-            return false;
+            return sets[map[p]] == sets[map[q]];
 
         }
 
