@@ -47,8 +47,7 @@ namespace Cache
         }
         public bool TryGetValue(TKey key, out TValue value) //reorders list
         {
-            bool b = Dict.TryGetValue(key, out var node);
-            if(b)
+            if (Dict.TryGetValue(key, out var node))
             {
                 list.Remove(node);
                 list.AddFirst(node);
