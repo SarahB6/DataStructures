@@ -13,6 +13,8 @@ namespace HuffmanCoding
         char[] ch;
         charNode root;
         Dictionary<char, string> map;
+        Dictionary<char, byte[]> byteMap;
+        
 
         public HuffmanCode(string s)
         {
@@ -51,7 +53,7 @@ namespace HuffmanCoding
             }
         }
 
-            private void putInTree(Dictionary<char, int> dict)
+        private void putInTree(Dictionary<char, int> dict)
         {
             //consider if dict size is 1
             foreach(KeyValuePair<char, int> pair in dict)
@@ -85,6 +87,87 @@ namespace HuffmanCoding
             root = pqueue.getRoot();
         }
 
+        public KeyValuePair<char, bool>[] treeAsArray()
+        {
+            List<KeyValuePair<char, bool>> list = new List<KeyValuePair<char, bool>>();
+           
+            Queue<charNode> q = new Queue<charNode>();
+            int i = 0;
+            q.Enqueue(root);
+            while(q.Count != 0)
+            {
+                charNode cn = q.Dequeue();
+                KeyValuePair<char, bool> curr = new KeyValuePair<char, bool>(cn.charValue(), cn.charValue()=='$');
+                list.Add(curr);
+                i++;
+                if(cn.getLeft()!=null)
+                {
+                    q.Enqueue(cn.getLeft());
+                }
+                if(cn.getRight()!=null)
+                {
+                    q.Enqueue(cn.getRight());
+                }
+            }
+            KeyValuePair<char, bool>[] toReturn = list.ToArray();
+            
+            return toReturn;
+        }
+
+        public string FullBinary()
+        {
+            StringBuilder sb = new StringBuilder();
+            KeyValuePair<char, bool>[] treeArr = treeAsArray();
+            int a = treeArr.Length;
+            List<byte> list = new List<byte>();
+            list.Add((byte)a);
+            for(int i = 0; i<a; i++)
+            {
+                char currentChar = treeArr[i].Key;
+                bool currentBool = treeArr[i].Value;
+
+                list.Add(currentBool);
+                list.Add((byte)currentChar);
+                
+            }
+
+            return sb.ToString();
+        }
+
+        public charNode getRoot()
+        {
+            return root;
+        }
+
+        public charNode ArrayToTree(KeyValuePair<char, bool>[] asArray)
+        {
+            charNode thisRoot = new charNode(0, asArray[0].Key);
+            charNode curr = thisRoot;
+            Queue<charNode> q = new Queue<charNode>();
+            int currInt = 0;
+            q.Enqueue(curr);
+            while(q.Count != 0)
+            {
+                curr = q.Dequeue();
+                charNode left = new charNode(0, asArray[currInt + 1].Key);
+                charNode right = new charNode(0, asArray[currInt + 2].Key);
+                if (asArray[currInt + 1].Key == '$')
+                {
+                    q.Enqueue(left);
+                   
+                }
+                if (asArray[currInt + 2].Key == '$')
+                {
+                    q.Enqueue(right);
+                }
+                currInt+=2;
+                curr.setLeftChild(left);
+                curr.setRightChild(right);
+                    
+            }
+            return thisRoot;
+        }
+
         public string compress()
         {
             char val = ch[0];
@@ -113,11 +196,25 @@ namespace HuffmanCoding
             
             
             
-            return compressOriginal(ch, root);
+            return compressOriginalAsString(ch, root);
             
         }
 
-        public string compressOriginal(char[] ch, charNode root)
+        public byte[] compressOriginalAsByte(char[] ch, charNode root)
+        {
+            List<byte> byteList = new List<byte>();
+            // have 2 bytes store my first number (like the number of chars)
+            uint num = (uint)ch.Length;
+            KeyValuePair<char, bool>[] treeArr = treeAsArray();
+            for(int i = 0; i<ch.Length; i++)
+            {
+                
+            }
+
+            
+        }
+
+        public string compressOriginalAsString(char[] ch, charNode root)
         {// val is 111110000
             StringBuilder sb = new StringBuilder();
             string st = "";
