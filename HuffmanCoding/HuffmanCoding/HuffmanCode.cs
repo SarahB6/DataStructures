@@ -6,18 +6,18 @@ using HuffmanCoding;
 namespace HuffmanCoding
 {
     class HuffmanCode<T>
-        where T: IComparable<T>
+        where T : IComparable<T>
     {
         heap<charNode> pqueue;
         string s;
         char[] ch;
         charNode root;
         Dictionary<char, string> map;
-        Dictionary<char, byte[]> byteMap;
-        
+        StringBuilder finalAsString;
 
         public HuffmanCode(string s)
         {
+            finalAsString = new StringBuilder();
             map = new Dictionary<char, string>();
             this.s = s;
             pqueue = new heap<charNode>();
@@ -28,12 +28,12 @@ namespace HuffmanCoding
         {
             char[] stringInChar = s.ToCharArray();
             Dictionary<char, int> dict = new Dictionary<char, int>();
-            for(int i = 0; i<s.Length; i++)
+            for (int i = 0; i < s.Length; i++)
             {
                 int v = 0;
-                if(dict.TryGetValue(stringInChar[i], out v))
+                if (dict.TryGetValue(stringInChar[i], out v))
                 {
-                    dict[stringInChar[i]] = v+1;
+                    dict[stringInChar[i]] = v + 1;
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace HuffmanCoding
         private void putInTree(Dictionary<char, int> dict)
         {
             //consider if dict size is 1
-            foreach(KeyValuePair<char, int> pair in dict)
+            foreach (KeyValuePair<char, int> pair in dict)
             {
                 charNode node = new charNode(pair.Value, pair.Key);
                 pqueue.Insert(node);
@@ -71,7 +71,7 @@ namespace HuffmanCoding
                 charNode first = pqueue.Pop();
                 charNode second = pqueue.Pop();
                 charNode parent = new charNode((first.intValue() + second.intValue()), '$');
-                if(first.intValue() > second.intValue())
+                if (first.intValue() > second.intValue())
                 {
                     parent.setRightChild(first);
                     parent.setLeftChild(second);
@@ -87,94 +87,19 @@ namespace HuffmanCoding
             root = pqueue.getRoot();
         }
 
-        public KeyValuePair<char, bool>[] treeAsArray()
+        public byte[] compress()
         {
-            List<KeyValuePair<char, bool>> list = new List<KeyValuePair<char, bool>>();
-           
-            Queue<charNode> q = new Queue<charNode>();
-            int i = 0;
-            q.Enqueue(root);
-            while(q.Count != 0)
-            {
-                charNode cn = q.Dequeue();
-                KeyValuePair<char, bool> curr = new KeyValuePair<char, bool>(cn.charValue(), cn.charValue()=='$');
-                list.Add(curr);
-                i++;
-                if(cn.getLeft()!=null)
-                {
-                    q.Enqueue(cn.getLeft());
-                }
-                if(cn.getRight()!=null)
-                {
-                    q.Enqueue(cn.getRight());
-                }
-            }
-            KeyValuePair<char, bool>[] toReturn = list.ToArray();
-            
-            return toReturn;
+            compresser();
+            return originalAsByte();
         }
 
-        public string FullBinary()
-        {
-            StringBuilder sb = new StringBuilder();
-            KeyValuePair<char, bool>[] treeArr = treeAsArray();
-            int a = treeArr.Length;
-            List<byte> list = new List<byte>();
-            list.Add((byte)a);
-            for(int i = 0; i<a; i++)
-            {
-                char currentChar = treeArr[i].Key;
-                bool currentBool = treeArr[i].Value;
-
-                list.Add(currentBool);
-                list.Add((byte)currentChar);
-                
-            }
-
-            return sb.ToString();
-        }
-
-        public charNode getRoot()
-        {
-            return root;
-        }
-
-        public charNode ArrayToTree(KeyValuePair<char, bool>[] asArray)
-        {
-            charNode thisRoot = new charNode(0, asArray[0].Key);
-            charNode curr = thisRoot;
-            Queue<charNode> q = new Queue<charNode>();
-            int currInt = 0;
-            q.Enqueue(curr);
-            while(q.Count != 0)
-            {
-                curr = q.Dequeue();
-                charNode left = new charNode(0, asArray[currInt + 1].Key);
-                charNode right = new charNode(0, asArray[currInt + 2].Key);
-                if (asArray[currInt + 1].Key == '$')
-                {
-                    q.Enqueue(left);
-                   
-                }
-                if (asArray[currInt + 2].Key == '$')
-                {
-                    q.Enqueue(right);
-                }
-                currInt+=2;
-                curr.setLeftChild(left);
-                curr.setRightChild(right);
-                    
-            }
-            return thisRoot;
-        }
-
-        public string compress()
+        public string compresser()
         {
             char val = ch[0];
             bool allSame = true;
-            for(int i = 0; i<ch.Length; i++)
+            for (int i = 0; i < ch.Length; i++)
             {
-                if(ch[i] != val)
+                if (ch[i] != val)
                 {
                     allSame = false;
                 }
@@ -183,55 +108,59 @@ namespace HuffmanCoding
             Dictionary<char, int> map = new Dictionary<char, int>();
             Dictionary<char, int> dict = CalculateFrequencies();
             putInTree(dict);
-            if(allSame)
+            if (allSame)
             {
                 string str = "";
-                for(int i = 0; i<ch.Length; i++)
+                for (int i = 0; i < ch.Length; i++)
                 {
                     str += "1";
                 }
                 return str;
             }
-            
-            
-            
-            
-            return compressOriginalAsString(ch, root);
-            
+
+            return compressOriginal(ch, root);
+
         }
 
-        public byte[] compressOriginalAsByte(char[] ch, charNode root)
+        public byte[] originalAsByte()
         {
+            string codeAsString = finalAsString.ToString();
             List<byte> byteList = new List<byte>();
-            // have 2 bytes store my first number (like the number of chars)
-            uint num = (uint)ch.Length;
-            KeyValuePair<char, bool>[] treeArr = treeAsArray();
-            for(int i = 0; i<ch.Length; i++)
+            int numberOfZeros = 8 - codeAsString.Length % 8;
+            for (int i = 0; i < numberOfZeros; i++)
             {
-                
+                finalAsString.Append("0");
             }
-
-            
+            codeAsString = finalAsString.ToString();
+            for (int i = 0; i < codeAsString.Length / 8; i++)
+            {
+                string current8 = codeAsString.Substring(8 * i, 8);
+                byte b = Convert.ToByte(current8, 2);
+                byteList.Add(b);
+            }
+            byteList.Add((byte)numberOfZeros);
+            return byteList.ToArray();
         }
 
-        public string compressOriginalAsString(char[] ch, charNode root)
-        {// val is 111110000
+        public string compressOriginal(char[] ch, charNode root)
+        {
             StringBuilder sb = new StringBuilder();
             string st = "";
             //make a map where each thing in my hashmap starting from root becomes binary (left is 0 right is 1)
             addBinary(st, root);
             StringBuilder sbToReturn = new StringBuilder();
-            for(int i = 0; i<ch.Length; i++)
+            for (int i = 0; i < ch.Length; i++)
             {
                 sbToReturn.Append(map[ch[i]]);
             }
+            finalAsString = sbToReturn;
             return sbToReturn.ToString();
 
         }
 
         private void addBinary(string st, charNode curr)
         {
-            if(curr.getLeft() == null)
+            if (curr.getLeft() == null)
             {
                 map.Add(curr.charValue(), st);
                 return;
@@ -243,10 +172,33 @@ namespace HuffmanCoding
             }
         }
 
-        public string decompress(string inBin)
+        public string asString(byte[] inByte)
+        {
+            StringBuilder building = new StringBuilder();
+            int numOfZeros = inByte[inByte.Length - 1];
+            for (int i = 0; i < inByte.Length - 1; i++)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(Convert.ToString(inByte[i], 2));
+                StringBuilder sb2 = new StringBuilder();
+                int counter = sb.Length;
+                while (counter % 8 != 0)
+                {
+                    sb2.Append(0);
+                    counter++;
+                }
+                sb2.Append(sb);
+                building.Append(sb2);
+            }
+            building.Remove(building.Length - numOfZeros, numOfZeros);
+            return building.ToString();
+        }
+
+        public string decompress(byte[] inByte)
         {
             StringBuilder sb = new StringBuilder();
             StringBuilder toReturn = new StringBuilder();
+            string inBin = asString(inByte);
             charNode toUse = root;
             if (root.getLeft() == null && root.getRight() == null)
             {
