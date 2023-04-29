@@ -24,6 +24,25 @@ namespace HuffmanCoding
             ch = s.ToCharArray();
         }
 
+        public byte[] both()
+        {
+            List<byte> list = new List<byte>();
+            byte[] code = compress();
+            byte[] tree = FullBinary();
+            list.Add((byte)tree.Length);
+            for(int i = 0; i<tree.Length; i++)
+            {
+                list.Add(tree[i]);
+            }
+            
+            for(int i = 0; i<code.Length; i++)
+            {
+                list.Add(code[i]);
+            }
+            return list.ToArray();
+            
+        }
+
         public Dictionary<char, int> CalculateFrequencies()
         {
             char[] stringInChar = s.ToCharArray();
@@ -231,6 +250,87 @@ namespace HuffmanCoding
             return toReturn.ToString();
         }
 
+        public KeyValuePair<char, bool>[] treeAsArray()
+        {
+            List<KeyValuePair<char, bool>> list = new List<KeyValuePair<char, bool>>();
+
+            Queue<charNode> q = new Queue<charNode>();
+            int i = 0;
+            q.Enqueue(root);
+            while (q.Count != 0)
+            {
+                charNode cn = q.Dequeue();
+                KeyValuePair<char, bool> curr = new KeyValuePair<char, bool>(cn.charValue(), cn.charValue() == '$');
+                list.Add(curr);
+                i++;
+                if (cn.getLeft() != null)
+                {
+                    q.Enqueue(cn.getLeft());
+                }
+                if (cn.getRight() != null)
+                {
+                    q.Enqueue(cn.getRight());
+                }
+            }
+            KeyValuePair<char, bool>[] toReturn = list.ToArray();
+
+            return toReturn;
+        }
+
+        public byte[] FullBinary()
+        {
+            KeyValuePair<char, bool>[] treeArr = treeAsArray();
+            int a = treeArr.Length;
+            List<byte> list = new List<byte>();
+            list.Add((byte)a);
+            for (int i = 0; i < a; i++)
+            {
+                char currentChar = treeArr[i].Key;
+                bool currentBool = treeArr[i].Value;
+
+                if (currentBool == false)
+                {
+                    list.Add((byte)currentChar);
+                }
+
+            }
+
+            return list.ToArray();
+        }
+
+        public charNode getRoot()
+        {
+            return root;
+        }
+
+        public charNode ArrayToTree(KeyValuePair<char, bool>[] asArray)
+        {
+            charNode thisRoot = new charNode(0, asArray[0].Key);
+            charNode curr = thisRoot;
+            Queue<charNode> q = new Queue<charNode>();
+            int currInt = 0;
+            q.Enqueue(curr);
+            while (q.Count != 0)
+            {
+                curr = q.Dequeue();
+                charNode left = new charNode(0, asArray[currInt + 1].Key);
+                charNode right = new charNode(0, asArray[currInt + 2].Key);
+                if (asArray[currInt + 1].Key == '$')
+                {
+                    q.Enqueue(left);
+
+                }
+                if (asArray[currInt + 2].Key == '$')
+                {
+                    q.Enqueue(right);
+                }
+                currInt += 2;
+                curr.setLeftChild(left);
+                curr.setRightChild(right);
+
+            }
+            return thisRoot;
+        }
 
     }
 }
