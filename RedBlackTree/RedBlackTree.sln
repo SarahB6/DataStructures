@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedBlackTree", "RedBlackTree\RedBlackTree.csproj", "{C5BD7141-08B1-4A1E-A581-6F8A9ECDA691}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5BD7141-08B1-4A1E-A581-6F8A9ECDA691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BD7141-08B1-4A1E-A581-6F8A9ECDA691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5BD7141-08B1-4A1E-A581-6F8A9ECDA691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BD7141-08B1-4A1E-A581-6F8A9ECDA691}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D44580B7-98F9-4091-A534-09007A78B9E7}
+	EndGlobalSection
+EndGlobal
