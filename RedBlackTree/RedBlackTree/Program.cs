@@ -6,12 +6,16 @@ namespace RedBlackTree
     {
         static void Main(string[] args)
         {
-            RedBlackTree2<int> rb = new RedBlackTree2<int>();
+            RedBlackTree<int> rb = new RedBlackTree<int>();
             rb.Insert(3);
             rb.Insert(1);
             rb.Insert(7);
             rb.Insert(10);
-
+            rb.Insert(14);
+            rb.Insert(4);
+            rb.Insert(81);
+            rb.Insert(18);
+            Console.WriteLine(rb.Validate());
         }
     }
 }

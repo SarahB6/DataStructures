@@ -1,244 +1,111 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
 namespace RedBlackTree
 {
-    class RedBlackTree<T>
-    where T:IComparable<T>
+    class RedBlackTree<T> where T : IComparable<T>
     {
-        Node<T> root;
-        
-        public void Add(T toAdd)
-        {
-            Node<T> newNode = new Node<T>(toAdd);
-            if(root == null)
-            {
-                root = newNode;
-            }
-            else
-            {
-                root = addR(root, newNode);
-            }
+        private Node<T> root;
 
+    public void Insert(T value)
+        {
+            root = Insert(root, value);
+            root.IsRed = false;
         }
 
-        private Node<T> addR(Node<T> currentNode, Node<T> toAdd) 
+        private Node<T> Insert(Node<T> node, T value)
         {
-            if(currentNode.getLeft() == null && currentNode.getRight() == null)
-            {
-                if(currentNode.getVal().CompareTo(toAdd.getVal()) > 0)
-                {
-                    currentNode.setLeft(toAdd);
-                }
-                else
-                {
-                    currentNode.setRight(toAdd);
-                }
-                currentNode = Fixup(currentNode);
-            }
-            //write my base case can prob be the same if not similar to the avl tree one
-            else
-            {
-                if(currentNode.getLeft().IsRed() && currentNode.getRight().IsRed())
-                {
-                    currentNode = FlipColor(currentNode);
-                }
-                currentNode = Fixup(currentNode);
-                addR(currentNode.getLeft(), toAdd);
-                addR(currentNode.getRight(), toAdd);
+            if (node == null)
+                return new Node<T>(value);
 
-            }
-            return currentNode;
-        }
-        
-        private Node<T> FlipColor(Node<T> node)
-        {
-            if(node.getLeft() == null && node.getRight() == null)
-            {
-                node.switchRed();
-            }
-            else if(node.getLeft() == null)
-            {
-                node.switchRed();
-                Node<T> rightNode = node.getRight();
-                rightNode.switchRed();
-                node.setRight(rightNode);
-            }
-            else if (node.getRight() == null)
-            {
-                node.switchRed();
-                Node<T> leftNode = node.getLeft();
-                leftNode.switchRed();
-                node.setLeft(leftNode);
-            }
+            int cmp = value.CompareTo(node.Value);
+            if (cmp < 0)
+                node.Left = Insert(node.Left, value);
+            else if (cmp > 0)
+                node.Right = Insert(node.Right, value);
             else
-            {
-                node.switchRed();
-                Node<T> leftNode = node.getLeft();
-                leftNode.switchRed();
-                node.setLeft(leftNode);
-                Node<T> rightNode = node.getRight();
-                rightNode.switchRed();
-                node.setLeft(rightNode);
-            }
+                node.Value = value;
+
+            if (IsRed(node.Right) && !IsRed(node.Left))
+                node = RotateLeft(node);
+            if (IsRed(node.Left) && IsRed(node.Left.Left))
+                node = RotateRight(node);
+            if (IsRed(node.Left) && IsRed(node.Right))
+                FlipColors(node);
+
             return node;
         }
-        public Node<T> RotateLeft(Node<T> node)
+
+        private bool IsRed(Node<T> node)
         {
-            bool originalTopColor = node.IsRed();
-            bool pivotColor = node.getRight().IsRed();
-            Node<T> pivot = node.getRight();
-            node.setRight(pivot.getLeft());
-            pivot.setLeft(node);
-            return pivot;
+            if (node == null)
+                return false;
+            return node.IsRed;
         }
 
-        public Node<T> RotateRight(Node<T> node)
+        private Node<T> RotateLeft(Node<T> node)
         {
-            bool originalTopColor = node.IsRed();
-            bool pivotColor = node.getLeft().IsRed();
-            Node<T> pivot = node.getLeft();
-            node.setLeft(pivot.getRight());
-            pivot.setRight(node);
-            return pivot;
+            Node<T> x = node.Right;
+            node.Right = x.Left;
+            x.Left = node;
+            x.IsRed = node.IsRed;
+            node.IsRed = true;
+            return x;
         }
 
-
-        private void MoveRedRight(Node<T> currNode)
+        private Node<T> RotateRight(Node<T> node)
         {
-            if(!currNode.getRight().IsRed() && !currNode.getRight().getLeft().IsRed() && !currNode.getRight().getRight().IsRed())
+            Node<T> x = node.Left;
+            node.Left = x.Right;
+            x.Right = node;
+            x.IsRed = node.IsRed;
+            node.IsRed = true;
+            return x;
+        }
+
+        private void FlipColors(Node<T> node)
+        {
+            node.IsRed = true;
+            node.Left.IsRed = false;
+            node.Right.IsRed = false;
+        }
+
+        public bool Validate()
+        {
+            Node<T> curr = root;
+            int counter = 0;
+            while (curr != null)
             {
-                FlipColor(currNode);
-                if(currNode.getLeft().getLeft().IsRed() || currNode.getLeft().getRight().IsRed())
+                if (!curr.IsRed)
                 {
-                    RotateLeft(currNode);
-
-                    if (currNode.getRight().IsRed() && currNode.getRight().getRight().IsRed())
-                    {
-                        FlipColor(currNode);
-                    }
-
+                    counter++;
                 }
+                curr = curr.Left;
             }
+            return ValidateR(root, 0, counter);
+
         }
 
-        private void MoveRedLeft(Node<T> currNode)
+        private bool ValidateR(Node<T> curr, int currentCount, int neededCount)
         {
-            if (!currNode.getLeft().IsRed() && !currNode.getLeft().getLeft().IsRed() && !currNode.getLeft().getRight().IsRed())
+            if (curr == null)
             {
-                FlipColor(currNode);
-                if(currNode.getRight().getLeft().IsRed() || currNode.getRight().getRight().IsRed())
+                if (currentCount != neededCount)
                 {
-                    MoveRedRight(currNode.getRight());
-                    RotateLeft(currNode);
-                    FlipColor(currNode);
+                    return false;
                 }
-            }
-        }
-
-        public void Remove(T val) //write
-        {
-            Node<T> currNode = root;
-            if(val.CompareTo(currNode.getVal()) < 0)
-            {
-                currNode = currNode.getLeft();
-            }
-        }
-
-        private Node<T> Min(Node<T> node)
-        {
-            if (node.getLeft() == null) return node;
-            return Min(node.getLeft());
-        }
-
-        private T RemoveR(Node<T> currNode, T val)
-        {
-            if(currNode ==  null)
-            {
-                throw new InvalidProgramException(); 
-            }
-            if(val.CompareTo(currNode.getVal()) < 0)
-            {
-                if(!currNode.getLeft().IsRed() && !currNode.getLeft().getLeft().IsRed())
-                {
-                    MoveRedLeft(currNode);
-                }
-                Fixup(currNode);
-                RemoveR(currNode.getLeft(), val);
+                currentCount = 0;
             }
             else
             {
-                if(currNode.getLeft().IsRed())
+                if (!curr.IsRed)
                 {
-                    RotateRight(currNode);
+                    currentCount++;
                 }
-                if(currNode.getVal().CompareTo(val) == 0)
-                {
-                    if(currNode.getLeft() == null)
-                    {
-                        currNode.setRed(true);
-                        currNode = null;
-                        
-                    }
-                    else
-                    {
-                        Node<T> toChange = Min(currNode.getRight());
-                        currNode.setVal(toChange.getVal());
-                        Fixup(currNode);
-                        RemoveR(currNode.getRight(), toChange.getVal());
-                    }
-
-                }
-                else if(currNode.getVal().CompareTo(val) < 0)
-                {
-                    if(!currNode.getRight().getLeft().IsRed() && !currNode.getRight().getLeft().getLeft().IsRed())
-                    {
-                        MoveRedRight(currNode);
-                    }
-                    Fixup(currNode);
-                    RemoveR(currNode.getRight(), val);
-                }
-
+                ValidateR(curr.Left, currentCount, neededCount);
+                ValidateR(curr.Right, currentCount, neededCount);
             }
-            return val;
-        }
-
-        private Node<T> Fixup(Node<T> node)
-        {
-            //First check if tree is left leaning
-            if(node.getRight() != null && node.getLeft() != null && node.getRight().IsRed() && !node.getLeft().IsRed())
-            {
-                Node<T> p = RotateLeft(node);
-                node = p;
-            }
-            //Second check if a 4 node is unbalanced
-            if(node.getRight() != null && node.getLeft() != null && node.getLeft().IsRed() && node.getLeft().getLeft() != null && node.getLeft().getLeft().IsRed())
-            {
-                Node<T> p = RotateRight(node);
-                node = p;
-            }
-            //Third break up four nodes by switiching the color
-            if (node.getRight() != null && node.getLeft() != null && node.getLeft().IsRed() && node.getRight().IsRed())
-            {
-                FlipColor(node);
-            }
-            //Check if left child is a right leaning 3 node
-            if (node.getRight() != null && node.getLeft() != null && node.getLeft().getRight().IsRed()&& !node.getLeft().getLeft().IsRed())
-            {
-                if (node.getRight().IsRed())
-                {
-                    Node<T> p = RotateLeft(node);
-                    node = p;
-                }
-                //Second check if a 4 node is unbalanced
-                if (node.getLeft().IsRed() && node.getLeft().getLeft().IsRed())
-                {
-                    Node<T> p = RotateRight(node);
-                    node = p;
-                }
-            }
-            return node;
+            return true;
         }
     }
 }
